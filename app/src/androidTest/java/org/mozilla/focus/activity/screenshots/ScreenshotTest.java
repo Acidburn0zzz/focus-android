@@ -14,10 +14,10 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.mozilla.focus.activity.helpers.HostScreencapScreenshotStrategy;
 import org.mozilla.focus.activity.helpers.SessionLoadedIdlingResource;
 
 import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
 /**
  * Base class for tests that take screenshots.
@@ -52,8 +52,8 @@ abstract class ScreenshotTest {
         device = UiDevice.getInstance(instrumentation);
 
         // Use this to switch between default strategy and HostScreencap strategy
-        //Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
-        Screengrab.setDefaultScreenshotStrategy(new HostScreencapScreenshotStrategy(device));
+        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
+        //Screengrab.setDefaultScreenshotStrategy(new HostScreencapScreenshotStrategy(device));
 
         device.waitForIdle();
     }
@@ -66,6 +66,7 @@ abstract class ScreenshotTest {
 
     @After
     public void tearDownIdlingResources() {
+        device.waitForIdle();
         IdlingRegistry.getInstance().unregister(loadingIdlingResource);
     }
 

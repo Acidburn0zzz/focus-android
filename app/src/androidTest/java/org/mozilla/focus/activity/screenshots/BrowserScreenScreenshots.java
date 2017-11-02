@@ -82,6 +82,7 @@ public class BrowserScreenScreenshots extends ScreenshotTest {
 
     @Test
     public void takeScreenshotsOfBrowsingScreen() throws Exception {
+        Screengrab.screenshot("Ignore");
         takeScreenshotsOfBrowsingView();
         takeScreenshotsOfMenu();
         takeScreenshotsOfOpenWithAndShare();

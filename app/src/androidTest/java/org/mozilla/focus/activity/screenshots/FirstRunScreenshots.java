@@ -33,6 +33,7 @@ public class FirstRunScreenshots extends ScreenshotTest {
 
     @Test
     public void takeScreenshotsOfFirstrun() throws UiObjectNotFoundException {
+        Screengrab.screenshot("Ignore");
         assertTrue(device.findObject(new UiSelector()
                 .text(getString(R.string.firstrun_defaultbrowser_title))
                 .enabled(true)
