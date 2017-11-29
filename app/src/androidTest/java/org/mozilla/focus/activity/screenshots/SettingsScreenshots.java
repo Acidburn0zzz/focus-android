@@ -28,10 +28,12 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.PreferenceMatchers.withTitleText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -99,9 +101,63 @@ public class SettingsScreenshots extends ScreenshotTest {
         TestHelper.settingsHeading.waitUntilGone(waitingTime);
         Screengrab.screenshot("SearchEngine_Add_Search_Engine");
         TestHelper.pressBackKey();
+        TestHelper.pressBackKey();
+
+        /* Tap autocomplete menu */
+        final String urlAutocompletemenu = getString(R.string.preference_subitem_autocomplete);
+        onData(withTitleText(urlAutocompletemenu))
+                .perform(click());
+        onView(withText(getString(R.string.preference_autocomplete_custom_summary)))
+                .check(matches(isDisplayed()));
+        Screengrab.screenshot("Autocomplete_Menu_Item");
+
+        /* Enable Autocomplete, and enter Custom URLs */
+        onView(withText(getString(R.string.preference_autocomplete_custom_summary)))
+                .perform(click());
+        /* Add custom URL */
+        onView(withText(getString(R.string.preference_autocomplete_subitem_customlist)))
+                .perform(click());
+        final String addCustomURLAction = getString(R.string.preference_autocomplete_action_add);
+        onView(withText(addCustomURLAction))
+                .check(matches(isDisplayed()));
+        Screengrab.screenshot("Autocomplete_Custom_URL_List");
+
+        onView(withText(addCustomURLAction))
+                .perform(click());
+        onView(withId(R.id.domainView))
+                .check(matches(isDisplayed()));
+        Screengrab.screenshot("Autocomplete_Add_Custom_URL_Dialog");
+        onView(withId(R.id.domainView))
+                .perform(typeText("screenshot.com"));
+        onView(withId(R.id.save))
+                .perform(click());
+        onView(withText(addCustomURLAction))
+                .check(matches(isDisplayed()));
+
+        /* Remove menu */
+        final String removeMenu = getString(R.string.preference_autocomplete_menu_remove);
+        onView(withContentDescription(getString(R.string.content_description_menu)))
+                .perform(click());
+        onView(withText(removeMenu))
+                .check(matches(isDisplayed()));
+        Screengrab.screenshot("Autocomplete_Custom_URL_Remove_Menu_Item");
+        onView(withText(removeMenu))
+                .perform(click());
+
+        /* Remove dialog */
+        onView(withText(getString(R.string.preference_autocomplete_title_remove)))
+                .check(matches(isDisplayed()));
+        Screengrab.screenshot("Autocomplete_Custom_URL_Remove_Dialog");
+        TestHelper.pressBackKey();
+        onView(withText(addCustomURLAction))
+                .check(matches(isDisplayed()));
+        TestHelper.pressBackKey();
+        onView(withText(urlAutocompletemenu))
+                .check(matches(isDisplayed()));
+        TestHelper.pressBackKey();
+        TestHelper.settingsHeading.waitForExists(waitingTime);
 
         /* scroll down */
-        TestHelper.pressBackKey();
         assertTrue(TestHelper.settingsHeading.waitForExists(waitingTime));
         UiScrollable settingsView = new UiScrollable(new UiSelector().scrollable(true));
         settingsView.scrollToEnd(4);
