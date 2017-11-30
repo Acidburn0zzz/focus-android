@@ -4,6 +4,7 @@
 
 package org.mozilla.focus.activity.screenshots;
 
+import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.web.webdriver.Locator;
 import android.support.test.rule.ActivityTestRule;
@@ -12,6 +13,7 @@ import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiScrollable;
 import android.support.test.uiautomator.UiSelector;
 
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +22,9 @@ import org.mozilla.focus.R;
 import org.mozilla.focus.activity.MainActivity;
 import org.mozilla.focus.activity.TestHelper;
 import org.mozilla.focus.activity.helpers.MainActivityFirstrunTestRule;
+import org.mozilla.focus.autocomplete.CustomAutocomplete;
+
+import java.util.Collections;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
@@ -53,6 +58,18 @@ public class SettingsScreenshots extends ScreenshotTest {
 
     @ClassRule
     public static final LocaleTestRule localeTestRule = new LocaleTestRule();
+
+    @After // Before/After - whatever you need.
+    public void clearSettings() {
+        PreferenceManager.getDefaultSharedPreferences(
+                InstrumentationRegistry.getInstrumentation().getTargetContext())
+                .edit()
+                .clear()
+                .apply();
+        CustomAutocomplete.INSTANCE.saveDomains(
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                Collections.<String>emptyList());
+    }
 
     @Test
     public void takeScreenShotsOfSettings() throws Exception {
@@ -117,6 +134,7 @@ public class SettingsScreenshots extends ScreenshotTest {
         /* Add custom URL */
         onView(withText(getString(R.string.preference_autocomplete_subitem_customlist)))
                 .perform(click());
+        device.waitForIdle();
         final String addCustomURLAction = getString(R.string.preference_autocomplete_action_add);
         onView(withText(addCustomURLAction))
                 .check(matches(isDisplayed()));
@@ -131,6 +149,7 @@ public class SettingsScreenshots extends ScreenshotTest {
                 .perform(typeText("screenshot.com"));
         onView(withId(R.id.save))
                 .perform(click());
+        device.waitForIdle();
         onView(withText(addCustomURLAction))
                 .check(matches(isDisplayed()));
 
@@ -138,23 +157,29 @@ public class SettingsScreenshots extends ScreenshotTest {
         final String removeMenu = getString(R.string.preference_autocomplete_menu_remove);
         onView(withContentDescription(getString(R.string.content_description_menu)))
                 .perform(click());
+        device.waitForIdle();
         onView(withText(removeMenu))
                 .check(matches(isDisplayed()));
         Screengrab.screenshot("Autocomplete_Custom_URL_Remove_Menu_Item");
         onView(withText(removeMenu))
                 .perform(click());
-
+        device.waitForIdle();
         /* Remove dialog */
         onView(withText(getString(R.string.preference_autocomplete_title_remove)))
                 .check(matches(isDisplayed()));
+        TestHelper.pressBackKey();  // remove keyboard
         Screengrab.screenshot("Autocomplete_Custom_URL_Remove_Dialog");
         TestHelper.pressBackKey();
+        device.waitForIdle();
         onView(withText(addCustomURLAction))
                 .check(matches(isDisplayed()));
+        /* need to wait here */
         TestHelper.pressBackKey();
+        device.waitForIdle();
         onView(withText(urlAutocompletemenu))
                 .check(matches(isDisplayed()));
         TestHelper.pressBackKey();
+        device.waitForIdle();
         TestHelper.settingsHeading.waitForExists(waitingTime);
 
         /* scroll down */
