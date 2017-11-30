@@ -13,7 +13,7 @@ import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiScrollable;
 import android.support.test.uiautomator.UiSelector;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class SettingsScreenshots extends ScreenshotTest {
     @ClassRule
     public static final LocaleTestRule localeTestRule = new LocaleTestRule();
 
-    @After // Before/After - whatever you need.
+    @Before
     public void clearSettings() {
         PreferenceManager.getDefaultSharedPreferences(
                 InstrumentationRegistry.getInstrumentation().getTargetContext())
