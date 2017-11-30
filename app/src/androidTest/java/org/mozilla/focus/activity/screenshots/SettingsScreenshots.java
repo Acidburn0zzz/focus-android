@@ -38,7 +38,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.PreferenceMatchers.withTitleText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -155,8 +154,7 @@ public class SettingsScreenshots extends ScreenshotTest {
 
         /* Remove menu */
         final String removeMenu = getString(R.string.preference_autocomplete_menu_remove);
-        onView(withContentDescription(getString(R.string.content_description_menu)))
-                .perform(click());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getContext());
         device.waitForIdle();
         onView(withText(removeMenu))
                 .check(matches(isDisplayed()));
@@ -173,7 +171,6 @@ public class SettingsScreenshots extends ScreenshotTest {
         device.waitForIdle();
         onView(withText(addCustomURLAction))
                 .check(matches(isDisplayed()));
-        /* need to wait here */
         TestHelper.pressBackKey();
         device.waitForIdle();
         onView(withText(urlAutocompletemenu))
