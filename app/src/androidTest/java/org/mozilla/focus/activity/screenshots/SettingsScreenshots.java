@@ -33,6 +33,7 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.PreferenceMatchers.withTitleText;
@@ -145,7 +146,7 @@ public class SettingsScreenshots extends ScreenshotTest {
                 .check(matches(isDisplayed()));
         Screengrab.screenshot("Autocomplete_Add_Custom_URL_Dialog");
         onView(withId(R.id.domainView))
-                .perform(typeText("screenshot.com"));
+                .perform(typeText("screenshot.com"), closeSoftKeyboard());;
         onView(withId(R.id.save))
                 .perform(click());
         device.waitForIdle();
@@ -165,7 +166,6 @@ public class SettingsScreenshots extends ScreenshotTest {
         /* Remove dialog */
         onView(withText(getString(R.string.preference_autocomplete_title_remove)))
                 .check(matches(isDisplayed()));
-        TestHelper.pressBackKey();  // remove keyboard
         Screengrab.screenshot("Autocomplete_Custom_URL_Remove_Dialog");
         TestHelper.pressBackKey();
         device.waitForIdle();
